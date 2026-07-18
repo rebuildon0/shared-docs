@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RC 付着割裂破壊の検討 まとめ（ルート1・2・3／強度型・靭性型）</title>
+<style>
+  :root{
+    --ink:#1f2733; --sub:#5a6675; --line:#e2e6ec; --bg:#f6f8fb; --card:#fff;
+    --accent:#1f5fa8; --accent-soft:#eaf2fb;
+    --jin:#0f7b6c; --jin-soft:#e6f5f1;      /* 靭性型 */
+    --kyo:#c0631a; --kyo-soft:#fdf0e4;      /* 強度型 */
+    --warn:#b3261e; --warn-soft:#fdecea;
+    --ok:#0f7b6c; --ng:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",system-ui,sans-serif;
+    line-height:1.75; font-size:15px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px 80px;}
+  header.hero{
+    background:linear-gradient(135deg,#1f5fa8,#2a7bd0); color:#fff;
+    padding:34px 30px; border-radius:0 0 18px 18px; margin-bottom:26px;
+    box-shadow:0 6px 20px rgba(31,95,168,.18);
+  }
+  header.hero h1{margin:0 0 6px; font-size:25px; letter-spacing:.02em;}
+  header.hero .lead{margin:0; opacity:.95; font-size:14px;}
+  header.hero .meta{margin-top:12px; font-size:12.5px; opacity:.9; border-top:1px solid rgba(255,255,255,.3); padding-top:10px;}
+  h2{
+    font-size:19px; margin:38px 0 14px; padding:8px 0 8px 14px;
+    border-left:6px solid var(--accent); background:linear-gradient(90deg,var(--accent-soft),transparent);
+  }
+  h2 .no{color:var(--accent); font-weight:800; margin-right:8px;}
+  h3{font-size:16px; margin:22px 0 10px; color:#243b57;}
+  p{margin:10px 0;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0; box-shadow:0 1px 3px rgba(20,40,80,.04);}
+  table{width:100%; border-collapse:collapse; margin:14px 0; background:#fff; font-size:13.7px; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(20,40,80,.05);}
+  th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top;}
+  thead th{background:#eef2f7; color:#243b57; font-weight:700; font-size:13px;}
+  tbody tr:nth-child(even){background:#fafbfd;}
+  .ok{color:var(--ok); font-weight:800;}
+  .ng{color:var(--ng); font-weight:800;}
+  .tag{display:inline-block; font-size:11px; color:var(--sub); background:#eef1f5; border-radius:5px; padding:1px 6px; margin-left:4px; white-space:nowrap;}
+  .callout{border-radius:10px; padding:14px 16px; margin:14px 0; border:1px solid;}
+  .callout .t{font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px;}
+  .c-key{background:var(--accent-soft); border-color:#c7ddf3;}
+  .c-warn{background:var(--warn-soft); border-color:#f3c9c5;}
+  .c-warn .t{color:var(--warn);}
+  .c-note{background:#fffbe8; border-color:#f0e2a8;}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:720px){.two{grid-template-columns:1fr;}}
+  .panel{border-radius:12px; padding:16px 18px; border:1.5px solid;}
+  .panel h3{margin-top:0;}
+  .panel.jin{background:var(--jin-soft); border-color:#a9ddd2;}
+  .panel.jin h3{color:var(--jin);}
+  .panel.kyo{background:var(--kyo-soft); border-color:#eecaa6;}
+  .panel.kyo h3{color:var(--kyo);}
+  .panel ul{margin:8px 0 0; padding-left:18px;}
+  .panel li{margin:5px 0;}
+  .cmp th.jin{background:var(--jin-soft); color:var(--jin);}
+  .cmp th.kyo{background:var(--kyo-soft); color:var(--kyo);}
+  .cmp td.jin{background:#f2faf8;}
+  .cmp td.kyo{background:#fdf6ee;}
+  .cmp td.h{font-weight:700; background:#eef2f7; width:130px;}
+  ul.clean{margin:8px 0; padding-left:20px;}
+  ul.clean li{margin:6px 0;}
+  ol.flow{counter-reset:s; list-style:none; padding-left:0; margin:10px 0;}
+  ol.flow li{position:relative; padding:8px 8px 8px 44px; margin:8px 0; background:#fff; border:1px solid var(--line); border-radius:9px;}
+  ol.flow li::before{counter-increment:s; content:counter(s); position:absolute; left:10px; top:8px; width:24px; height:24px; background:var(--accent); color:#fff; border-radius:50%; text-align:center; line-height:24px; font-weight:800; font-size:13px;}
+  .src{color:var(--sub); font-size:11.5px;}
+  .foot{font-size:12.5px; color:var(--sub);}
+  .legend{font-size:12.5px; color:var(--sub); margin:6px 0 0;}
+  code{background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:12.5px;}
+  .pill{display:inline-block; padding:1px 8px; border-radius:999px; font-size:11.5px; font-weight:700;}
+  .pill.fd{background:var(--kyo-soft); color:var(--kyo); border:1px solid #eecaa6;}
+  .pill.fa{background:var(--jin-soft); color:var(--jin); border:1px solid #a9ddd2;}
+  .toc{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:8px; columns:2; column-gap:26px;}
+  @media(max-width:720px){.toc{columns:1;}}
+  .toc a{color:var(--accent); text-decoration:none; font-size:13.5px; display:block; padding:3px 0;}
+  .toc a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>RC 付着割裂破壊の検討 まとめ</h1>
+  <p class="lead">耐震計算ルート1・2・3 別の取り扱いと、ルート3の設計思想（強度型／靭性型）</p>
+  <div class="meta">対象：Google Drive「06.岩本/01_参考資料/02_RC」内資料一式　｜　作成日：2026-07-17　｜　各記述の【S1】〜【S6】は末尾「参考出典」に対応</div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <a href="#s0">0. 大前提：「付着」と「付着割裂破壊」は別の検討</a>
+  <a href="#s1">1. 付着・割裂・付着割裂破壊とは</a>
+  <a href="#s2">2. RC規準の変遷と「3つの限界」</a>
+  <a href="#s3">3. 制度の変遷（技術基準2007→2015→2020）</a>
+  <a href="#s4">4. ルート別 検討要否マトリクス</a>
+  <a href="#s5">5. ★ルート3の設計思想：強度型 vs 靭性型</a>
+  <a href="#s6">6. 付着割裂破壊の検討方法（規準式）</a>
+  <a href="#s7">7. 検討を省略できる条件</a>
+  <a href="#s8">8. 適合性判定での代表的な指摘</a>
+  <a href="#s9">9. 実務チェックリスト</a>
+  <a href="#sA">付録A. 資料一覧（重複メモ）</a>
+  <a href="#sB">付録B/C. 要確認メモ・出典</a>
+</nav>
+
+<!-- 0 -->
+<h2 id="s0"><span class="no">0.</span>最初に押さえる大前提 ── 「付着」と「付着割裂破壊」は別の検討</h2>
+<div class="callout c-key">
+  <div class="t">🔑 ここを混同すると議論が噛み合いません</div>
+  同じ「付着」という語を含みますが、設計上の位置づけがまったく違います。<b>本まとめの主題は「付着割裂破壊の検討」（大地震・安全性確保）</b>です。<span class="src">【S3】【S5】</span>
+</div>
+<table>
+  <thead><tr><th>区分</th><th>目的（設計目標）</th><th>荷重段階</th><th>どの計算側か</th><th>内容</th></tr></thead>
+  <tbody>
+    <tr><td><b>「付着」の検討</b></td><td>使用性確保・損傷制御</td><td>長期・短期（常時〜稀地震）</td><td>許容応力度計算 側</td><td>曲げ補強鉄筋の付着性能に起因するひび割れ・残留変形などの障害を防ぐ</td></tr>
+    <tr style="background:#eaf2fb;"><td><b>「付着割裂破壊」の検討</b><span class="tag">本題</span></td><td>安全性確保</td><td>大地震動時</td><td>保有水平耐力計算 側</td><td>付着割裂破壊（脆性破壊）が生じないこと、およびそれに伴う曲げ・せん断終局強度の低下が生じないことを確認</td></tr>
+  </tbody>
+</table>
+
+<!-- 1 -->
+<h2 id="s1"><span class="no">1.</span>付着・割裂・付着割裂破壊とは</h2>
+<div class="card">
+  <ul class="clean">
+    <li><b>付着</b>：鉄筋とコンクリートの界面に生じる滑りに抵抗する作用（主に異形鉄筋が対象）。<span class="src">【S5】</span></li>
+    <li><b>割裂</b>：応力を受けて、結びついていたものが切り離される・剥がれる現象。<span class="src">【S5】</span></li>
+    <li><b>付着割裂破壊（bond splitting failure）</b>：鉄筋の節（ふし）が周囲コンクリートを押し広げる「くさび効果」で、かぶりコンクリートに鉄筋に沿った割裂ひび割れが生じ、曲げ・せん断終局強度が低下する<b>脆性破壊</b>。<span class="src">【S5】【S2】</span></li>
+  </ul>
+  <div class="callout c-key" style="margin-bottom:0;">
+    <div class="t">▶ 強度型／靭性型の分岐点</div>
+    保有水平耐力計算では、<b>付着割裂破壊はせん断破壊と同じ「急激な耐力低下のおそれのある脆性破壊」</b>として扱われる。したがって<b>はり・柱を FA〜FC の部材種別に区分して靭性を期待するには、付着割裂破壊による脆性破壊を防止することが必要。</b><span class="src">【S2-①冒頭】</span>
+  </div>
+</div>
+
+<!-- 2 -->
+<h2 id="s2"><span class="no">2.</span>RC規準の変遷と「3つの限界」</h2>
+<p>RC規準(2010) で、付着の設計目標が <b>使用限界・損傷限界・安全限界</b> の3つに整理されました。<span class="src">【S3】</span></p>
+<table>
+  <thead><tr><th>限界</th><th>対応する設計目標</th><th>内容</th><th>採用している設計法</th></tr></thead>
+  <tbody>
+    <tr><td>使用限界</td><td>使用性確保</td><td>長期荷重時の付着性能に起因し、常時使用で機能的・感覚的障害が生じない</td><td>RC規準(1991)</td></tr>
+    <tr><td>損傷限界</td><td>損傷制御</td><td>短期荷重時の付着性能に起因し、過大な残留ひび割れ・変形が生じない</td><td>RC規準(1991)</td></tr>
+    <tr style="background:#eaf2fb;"><td><b>安全限界</b></td><td><b>安全性確保</b></td><td><b>付着割裂破壊が生じないこと、およびそれに伴う曲げ・せん断終局強度の低下が生じない</b></td><td><b>RC規準(1999)</b></td></tr>
+  </tbody>
+</table>
+<p class="foot">検討式：使用性確保＝(16.1)/(16.2)式、損傷制御＝(16.3)/(16.4)式。<b>(16.1)(16.3)＝曲げ付着応力度 τ<sub>a1</sub></b>（RC規準1991と同じ）、<b>(16.2)(16.4)＝平均付着応力度 τ<sub>a2</sub> ≤ 0.8×許容付着応力度</b>（2010で追加）。安全限界の検討は RC規準(1999) の付着検討式の σ<sub>t</sub> を σ<sub>y</sub> に置換した式と同等。<span class="src">【S3】</span></p>
+
+<!-- 3 -->
+<h2 id="s3"><span class="no">3.</span>制度上の取り扱いの変遷（技術基準 2007→2015→2020）</h2>
+<table>
+  <thead><tr><th></th><th>許容応力度計算の「付着」検討</th><th>「付着割裂破壊」検討</th></tr></thead>
+  <tbody>
+    <tr><td><b>技術基準 2007</b></td><td>RC規準(1991) を満足すればよい</td><td>主に<b>ルート3で部材種別を FA〜FC にするため</b>に「付着割裂破壊が生じないこと」を確認</td></tr>
+    <tr><td><b>技術基準 2015</b></td><td>RC規準(2010) を満足すればよい</td><td>ルート3に加え、<b>ICBA Q&amp;A（2015年版 No.19）でルート1・2 でも検討が必要</b>に。※ルート2-3廃止、ルート2＝2-1・2-2</td></tr>
+    <tr><td><b>2020年版</b></td><td>RC規準(2018) を参照</td><td>Q&amp;A番号が振り直し（下記に整理）</td></tr>
+  </tbody>
+</table>
+<div class="callout c-note">
+  <div class="t">📌 2020年版 Q&amp;A の役割分担（誤読しやすい点）</div>
+  <ul class="clean" style="margin:2px 0;">
+    <li><b>No.14 / No.31</b> … ルート1・2 での<b>省略条件</b></li>
+    <li><b>No.32</b> … ルート3（すべて通し配筋）で使える<b>検討方法（3種類）</b></li>
+    <li><b>No.43 / No.45 / No.48</b> … 検討方法そのものではなく、<b>部材種別・せん断保証設計・カットオフ筋の扱いに関する補足</b></li>
+  </ul>
+  <span class="src">【S1】</span>
+</div>
+
+<!-- 4 -->
+<h2 id="s4"><span class="no">4.</span>ルート別 検討要否マトリクス（柱梁部材・通し配筋の場合）</h2>
+<p>自作メモ（S6）の表を出典に照らして完成。左3列は許容応力度計算側の「<b>付着</b>」の検討、右端は保有耐力側の「<b>付着割裂破壊</b>」の検討。</p>
+<table>
+  <thead><tr><th>ルート</th><th>使用性確保<br><span class="foot">付着 τa1</span></th><th>損傷制御<br><span class="foot">付着 τa2</span></th><th>安全性確保<br><span class="foot">安全限界・付着</span></th><th>付着割裂破壊の検討<br><span class="foot">保有耐力側</span></th></tr></thead>
+  <tbody>
+    <tr><td><b>ルート1</b></td><td class="ok">必要 ○</td><td class="ok">必要 ○</td><td class="ng">省略可 ×<span class="tag">※1</span></td><td class="ng">省略可 ×<span class="tag">※1・※2</span></td></tr>
+    <tr><td><b>ルート2</b></td><td class="ok">必要 ○</td><td class="ok">必要 ○</td><td class="ng">省略可 ×<span class="tag">※1</span></td><td class="ng">省略可 ×<span class="tag">※1・※2</span></td></tr>
+    <tr style="background:#eaf2fb;"><td><b>ルート3</b></td><td class="ok">必要 ○<span class="tag">補完</span></td><td class="ok">必要 ○<span class="tag">補完</span></td><td class="ok">原則 必要 ○</td><td class="ok">原則 必要 ○</td></tr>
+  </tbody>
+</table>
+<p class="legend"><b>表の読み方：</b>「×＝省略可」は<b>その付着（割裂）検討を省略できる</b>意味で、<b>大地震に対する安全性そのものを放棄する意味ではありません</b>。ルート1・2 は壁量・柱量で耐力・剛性を担保する枠組みのため、通し配筋で曲げ降伏しない前提が満たされる限り省略できる趣旨。ルート3 の使用性/損傷制御欄は S6 空欄を S3 から<b>補完</b>（要確認）。</p>
+<div class="callout c-note">
+  <div class="t">📎 省略条件の脚注</div>
+  <ul class="clean" style="margin:2px 0;">
+    <li><b>※1（No.14）</b>：ルート1 は壁量・柱量の確保で「大地震時に曲げ降伏しない部材」を自動的に満足とみなせ、<b>通し配筋なら</b>付着割裂の検討を省略可。ルート2 も同様。</li>
+    <li><b>※1（No.31）</b>：曲げ降伏しない部材で全通し配筋なら、<b>せん断の安全性検討を行えば付着の安全性検討を省略可</b>（曲げ降伏の有無は設計者判断）。</li>
+    <li><b>※2（No.45）</b>：通し筋で割増しせん断力に対する保証設計があれば付着割裂検討は不要とみなせる。<b>ただし両端ヒンジの短スパン梁でシアスパン比 2.0 未満、または τu/Fc が 0.2 超</b>など影響が無視できない場合は、曲げ降伏後を含めた検討が必要。</li>
+  </ul>
+  <span class="src">【S1 No.14/No.31/No.45】</span>
+</div>
+<div class="callout c-warn">
+  <div class="t">⚠ カットオフ筋がある場合の例外</div>
+  ルート1・2 の上記省略は<b>通し配筋が前提</b>。カットオフ筋がある場合は、許容せん断力式を満たすだけでは足りず、<b>付録1-3.1 のはり・柱の終局強度（付着）検討、または RC規準(2010) 16条「付着および継手」1項「付着」(4)3) の方法</b>による検討が別途必要。<span class="src">【S3-p3】</span>
+</div>
+
+<!-- 5 -->
+<h2 id="s5"><span class="no">5.</span>★ ルート3 の設計思想 ── 強度型か靭性型か</h2>
+<div class="callout c-key">
+  付着割裂破壊のおそれがある部材を、ルート3 でどう扱うか。<b>「靭性でもたせる」か「強度でもたせる」かの工学的判断</b>であり、どちらが上位ということはありません。<span class="src">【S2-①冒頭】【S4】【S5】</span>
+</div>
+<div class="two">
+  <div class="panel jin">
+    <h3>(A) 靭性型 ── 付着割裂破壊を防止</h3>
+    <ul>
+      <li>荒川式／RC規準2018式／靭性指針式で<b>付着割裂破壊が生じないことを確認</b></li>
+      <li>脆性破壊を防止できれば <span class="pill fa">FA〜FC 維持</span> → 部材のじん性を期待できる</li>
+      <li>結果として <b>Ds を小さく</b>でき、<b>じん性で抵抗</b></li>
+      <li class="foot">参考：BUILD.一貫IV+ の「RC造柱種別」出力で「pt による種別」が FA/FB なら付着割裂が生じないと確認できる（※同ソフト固有の出力解釈で一般式の代替ではない）</li>
+    </ul>
+    <span class="src">【S1 No.32】【S2-①冒頭】【S4-⑤】</span>
+  </div>
+  <div class="panel kyo">
+    <h3>(B) 強度型 ── FD 扱いで強度で抵抗</h3>
+    <ul>
+      <li>付着割裂破壊の検討（例：技術基準 P630 の付1.3-20式）が <b class="ng">NG</b> で、その結果を<b>最終判断とするなら部材種別を <span class="pill fd">FD として扱う</span></b></li>
+      <li>FD は最も脆性側 → その構造種別の <b>Ds は最大側（FD相当）</b></li>
+      <li><b>必要保有水平耐力を大きく確保（＝強度）</b>して抵抗</li>
+      <li class="foot">＝「破壊を積極的に許容」ではなく、検討NGの結果を部材種別評価上FDとする扱い</li>
+    </ul>
+    <span class="src">【S4】【S2-①冒頭】</span>
+  </div>
+</div>
+<div class="callout c-warn">
+  <div class="t">⚠ 「Dsマックス」の具体値は断定していません</div>
+  Ds の最大値は構造種別（純ラーメン／耐力壁付き 等）で異なり、手元資料に具体値の記載がないため断定しません（<b>告示 S55-1792（Ds・Fes）等で要確認</b>）。
+</div>
+
+<h3>分岐に関わる補足</h3>
+<table>
+  <thead><tr><th>論点</th><th>内容</th><th>出典</th></tr></thead>
+  <tbody>
+    <tr><td>部材種別に影響がなくても検討は要る</td><td>柱にヒンジが生じず種別判定に影響しない場合でも脆性破壊の検討は必要。ただし<b>通し配筋の柱が Ds算定時応力に対しせん断の保証設計を満足すれば、付着割裂のおそれなしと判断可</b></td><td>No.43</td></tr>
+    <tr><td>閾値の使い分け（混同注意）</td><td><b>梁</b>：No.45 の「シアスパン比 2.0 未満／τu/Fc 0.2 超」。<b>柱</b>：ハシテックの「せん断スパン比 2.5 程度以下」「D29 以上」「SD390 以上」は<b>別文脈の目安</b></td><td>No.45／S5</td></tr>
+    <tr><td>カットオフ筋の付着長さ</td><td><b>Ds算定時応力（ヒンジ形成状況）に基づく</b>。靭性指針6.8節＝形成時は上限強度算定用強度・非形成時は信頼強度算定用強度。RC規準2018 16条＝曲げ降伏時は割増降伏強度</td><td>No.48</td></tr>
+  </tbody>
+</table>
+
+<h3>設計判断フロー（要約）</h3>
+<ol class="flow">
+  <li>対象部材が <b>通し配筋</b> か <b>カットオフ筋を含む</b> かを確認 <span class="src">【S3-p3】【No.48】</span></li>
+  <li><b>ルート1・2</b>：通し配筋＋大地震時に曲げ降伏しない＋せん断安全性を確認 → 付着（割裂）検討を省略可（RC規準2018 の省略規定で扱うなら「<b>荒川mean式</b>でせん断安全性を確認」が条件）<span class="src">【No.14/No.31】【S2-②要点5】</span></li>
+  <li><b>ルート3・靭性型</b>：荒川式／RC規準2018式／靭性指針式で付着割裂破壊の防止を確認 → <span class="pill fa">FA〜FC</span>・Ds 小 <span class="src">【No.32】【S2-①冒頭】</span></li>
+  <li><b>ルート3・強度型</b>：検討が NG でそれを最終判断とするなら <span class="pill fd">FD</span> 扱い → 最大側 Ds で保有耐力を確保 <span class="src">【S4】</span></li>
+  <li>短スパン梁で <b>シアスパン比 2.0 未満／τu/Fc 0.2 超</b> など影響が無視できない場合は、曲げ降伏後を含めて検討 <span class="src">【No.45】</span></li>
+</ol>
+
+<!-- 6 -->
+<h2 id="s6"><span class="no">6.</span>付着割裂破壊の検討方法（規準式）</h2>
+<h3>6-1. 代表的な規準系の3方法</h3>
+<table>
+  <thead><tr><th>検討方法</th><th>基礎式・考え方</th><th>鉄筋応力</th><th>要点</th><th>カットオフ筋</th></tr></thead>
+  <tbody>
+    <tr><td><b>RC規準2010</b></td><td>付着割裂の基準強度 fb は<b>藤井・森田式</b>（終局強度型指針の τbu）がベース</td><td>防止確認時 <b>1.1σy</b></td><td>平均付着応力度 τa2 で評価。テンションシフト（有効せい d）を見込み <b>(ld−d)</b> を有効付着長さ</td><td>ルート1・2 では別途検討が必要</td></tr>
+    <tr><td><b>RC規準2018</b></td><td>藤井・森田式ベース＋<b>2段配筋の付着性状</b>の新知見を係数化</td><td>防止確認時 <b>1.1σy</b></td><td>通し筋係数＝両端降伏1段目2/2段目1.5/一端降伏1。カットオフ筋＝ld≤L/2で1段目1.0・2段目0.75。1段目以外は fb×0.6</td><td>係数あり。付着長さは Ds算定時応力で</td></tr>
+    <tr><td><b>靭性指針</b></td><td>付着信頼強度 τbu は<b>前田・小谷式</b>ベース（中子筋効果・100N/mm²級高強度Coにも適用可）</td><td>上限強度算定用 <b>σyu</b>（両端降伏 Δσ=2σyu、2段目 1.5σyu）</td><td>設計用付着応力度 τf ≤ 付着信頼強度 τbu を確認</td><td>付着長さは Ds算定時応力で</td></tr>
+  </tbody>
+</table>
+<p class="foot">付着割裂破壊の検討では、局部的な曲げ付着応力度 τa1 ではなく <b>平均付着応力度 τa2</b> を用いる。<span class="src">【S2】</span></p>
+
+<h3>6-2. 「すべて通し配筋」の場合に選べる3方法（ICBA No.32）</h3>
+<div class="card" style="margin-top:6px;">
+  柱・はりをすべて通し配筋とした場合、次の<b>いずれか</b>でよい。<span class="src">【S1 No.32】</span>
+  <ol style="margin:8px 0 0;">
+    <li>付1.3-20〜22（<b>靭性指針式</b>）</li>
+    <li>付1.3-6, 7, 16（<b>荒川式</b>）</li>
+    <li><b>RC規準(2018) 16条1項(3)3)</b></li>
+  </ol>
+</div>
+
+<h3>6-3. 「荒川式による Qsu」で兼ねる場合の条件（誤用注意）</h3>
+<div class="callout c-warn">
+  <ul class="clean" style="margin:2px 0;">
+    <li>荒川式（min/mean）は<b>付着破壊した試験体を含む実験式</b>で、付着割裂破壊の安全性検討に用いてよい（2020技術基準 付録1-3）。</li>
+    <li><b>適用条件：せん断終局強度を荒川式で算定していること、かつ 通し筋であること。カットオフ筋には適用不可。</b></li>
+    <li>pt が大きく1段に多数の主筋を並べた梁、σwy が高い梁、M/Qd が小さい梁では<b>過大評価の可能性</b>あり。荒川式以外でせん断終局耐力を算定した場合は付着割裂破壊の防止を別途確認。</li>
+  </ul>
+  <span class="src">【S2-①】【S2-②】</span>
+</div>
+
+<!-- 7 -->
+<h2 id="s7"><span class="no">7.</span>検討を省略できる条件のまとめ</h2>
+<div class="card">
+  <ul class="clean">
+    <li><b>共通の原則</b>：曲げ降伏しないことが確かめられた部材で<b>すべて通し配筋</b>なら、<b>せん断の安全性の検討を行えば付着の安全性の検討を省略できる</b>（ルート1・2 も同様）。<span class="src">【No.31】</span></li>
+    <li><b>RC規準2018 の省略規定</b>：上記を RC規準2018 で扱う場合、「<b>荒川mean式</b>でせん断の安全性を確認」が条件。<span class="src">【S2-②要点5】</span></li>
+    <li><b>ルート1（No.14）</b>：壁量・柱量の確保で「大地震時に曲げ降伏しない部材」を自動的に満足とみなせ、通し配筋なら省略可。ルート2 も同様。<span class="src">【No.14】</span></li>
+    <li><b>カットオフ筋は例外</b>：ルート1・2 でも別途、付録1-3.1 の終局強度（付着）検討、または RC規準(2010) 16条の方法が必要。荒川式 Qsu は通し筋限定。<span class="src">【S3-p3】【S2-①】</span></li>
+  </ul>
+</div>
+
+<!-- 8 -->
+<h2 id="s8"><span class="no">8.</span>適合性判定での代表的な指摘と注意点</h2>
+<table>
+  <thead><tr><th>#</th><th>指摘</th><th>理由・対応</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>カットオフ筋があるのに靭性指針の「付着破壊を考慮したせん断信頼強度 Vbu」で検討</td><td><b>Vbu はカットオフ筋に適用不可</b>。設計用付着応力度 &lt; 付着信頼強度 を確認</td></tr>
+    <tr><td>2</td><td>高強度せん断補強＋<b>荒川式以外</b>でせん断終局耐力を算定した梁の通し筋を「問題なし」と扱う</td><td>荒川式以外なら<b>付着割裂破壊の防止を別途確認</b></td></tr>
+    <tr><td>3</td><td>比較的短いスパンの通し筋梁で RC規準2018 の付着応力度が NG</td><td>省略できるのは「<b>荒川式で Qsu を算定し、かつ曲げ降伏ヒンジが生じない部材</b>」に限る</td></tr>
+    <tr><td>4</td><td>短スパン梁でシアスパン比 2.0 未満／τu/Fc 0.2 超</td><td>影響が無視できない場合は<b>曲げ降伏後を含めた付着割裂破壊の検討</b>を実施 <span class="src">【No.45】</span></td></tr>
+  </tbody>
+</table>
+<p class="src" style="text-align:right;">【S2-②】</p>
+
+<!-- 9 -->
+<h2 id="s9"><span class="no">9.</span>実務チェックリスト</h2>
+<div class="card">
+  <ul class="clean">
+    <li>☐ 「付着の検討（使用性・損傷制御／許容応力度側）」と「付着割裂破壊の検討（安全性／保有耐力側）」を分けて考える</li>
+    <li>☐ ルート1・2：通し配筋＋大地震時に曲げ降伏しない＋せん断安全性 確認 → 付着（割裂）検討を省略可</li>
+    <li>☐ ルート1・2：カットオフ筋があれば、付録1-3.1 または RC規準2010 16条で別途検討</li>
+    <li>☐ ルート3・靭性型：荒川式／RC規準2018式／靭性指針式で防止を確認 → <span class="pill fa">FA〜FC</span> 維持・Ds 小</li>
+    <li>☐ ルート3・強度型：検討NGを最終判断とするなら <span class="pill fd">FD</span> 扱い → 最大側 Ds で保有耐力を確保</li>
+    <li>☐ 通し筋で Ds算定時応力に対するせん断保証設計を満たせば付着割裂のおそれなしと判断可（短スパン梁・シアスパン比2.0未満・τu/Fc 0.2超は除く）</li>
+    <li>☐ カットオフ筋の付着長さは Ds算定時応力（ヒンジ形成状況）で</li>
+    <li>☐ 荒川式 Qsu で兼ねるのは「せん断終局強度が荒川式」かつ「通し筋」のときのみ</li>
+  </ul>
+</div>
+
+<!-- A -->
+<h2 id="sA"><span class="no">付録A.</span>資料一覧（フォルダ整理メモ）</h2>
+<p class="foot">フォルダ内ファイルは移動・改名・削除していません（共有ドライブのため）。下表は棚卸しと<b>重複</b>の指摘。</p>
+<table>
+  <thead><tr><th>ファイル</th><th>種別</th><th>位置づけ</th><th>備考</th></tr></thead>
+  <tbody>
+    <tr><td><code>2020qa.pdf</code></td><td>ICBA公式Q&amp;A（2020年版）</td><td>★一次・最重要（S1）</td><td>No.14/31/32/43/45/48 が付着割裂関連</td></tr>
+    <tr><td><code>kozo-Q&amp;A.pdf</code></td><td>ICBA公式Q&amp;A（広範）</td><td>参考</td><td>付着以外の質疑も多数</td></tr>
+    <tr><td><code>GBRC190_14.pdf</code> / <code>GBRC191_11.pdf</code></td><td>GBRC技術解説①②</td><td>★一次・技術式（S2）</td><td>3規準式・荒川式・適判事例</td></tr>
+    <tr style="background:#fdf0e4;"><td><code>付着割裂破壊の解説①.pdf</code> / <code>②.pdf</code></td><td>同上</td><td>―</td><td><b>GBRC190_14/191_11 と同一（重複コピー）</b></td></tr>
+    <tr><td><code>技術基準改訂による…わかりやすく解説.pdf</code></td><td>構造ソフト解説(2016)</td><td>★ルート別取り扱い（S3）</td><td>PDF文字化け→画像で読解</td></tr>
+    <tr><td><code>付着割裂破壊の検討の概要と取り扱いの注意点.pdf</code></td><td>構造ソフト解説(一貫IV+)</td><td>★FD扱い・pt種別（S4）</td><td>PDF文字化け→画像で読解</td></tr>
+    <tr><td><code>付着割裂破壊を考える_…ハシテック.pdf</code></td><td>解説コラム</td><td>概念・変遷（S5）</td><td>本文は下記txtに清書</td></tr>
+    <tr><td><code>新しいテキスト ドキュメント.txt</code></td><td>ハシテック本文</td><td>S5のテキスト版</td><td>―</td></tr>
+    <tr><td><code>ルートごとの付着・付着割裂破壊の検討.docx</code></td><td>自作メモ</td><td>マトリクス骨子（S6）</td><td>ルート3行が空欄→本まとめで補完</td></tr>
+    <tr><td><code>付着の検討が省略できる場合 – まちの構造屋さん.html</code></td><td>解説ブログ</td><td>参考</td><td>―</td></tr>
+    <tr><td><code>080908.pdf</code> / <code>JSCA20071029.pdf</code> / <code>jirei_syusei_hp.pdf</code></td><td>参考資料</td><td>補足</td><td>付着周辺の資料</td></tr>
+    <tr><td><code>梁付着靱性保証型.xls</code></td><td>計算シート</td><td>靭性保証型の付着計算例</td><td>―</td></tr>
+  </tbody>
+</table>
+
+<!-- B/C -->
+<h2 id="sB"><span class="no">付録B/C.</span>出典外・要確認メモ／参考出典</h2>
+<div class="callout c-note">
+  <div class="t">出典外・要確認メモ</div>
+  <ul class="clean" style="margin:2px 0;">
+    <li>ルート3 の「使用性確保／損傷制御」欄は S6 空欄で、S3（RC規準2010 の使用限界・損傷限界）から補完。</li>
+    <li><b>「Dsマックス」の具体値</b>（構造種別ごとの FD 対応 Ds 値）は手元資料に記載がなく断定していない（告示 S55-1792 等で要確認）。</li>
+    <li>荒川式 Qsu 検討での鉄筋応力の個別設定は手元資料に明示がなく記載していない。</li>
+    <li>ルート1・2 のカットオフ筋は「別途安全性検討が必要」（S3）とした。</li>
+  </ul>
+</div>
+<div class="card">
+  <b>参考出典</b>
+  <ul class="clean" style="margin:6px 0 0;">
+    <li><b>S1</b>：ICBA『2020年版 建築物の構造関係技術基準解説書』質疑（Q&amp;A）</li>
+    <li><b>S2</b>：GBRC「付着割裂破壊の解説①②」（GBRC Vol.47 No.4／Vol.48 No.1）</li>
+    <li><b>S3</b>：構造ソフト『技術基準改訂による付着検討・付着割裂破壊検討の取り扱いについてわかりやすく解説』(qa201606)</li>
+    <li><b>S4</b>：構造ソフト『付着割裂破壊の検討の概要と取り扱いの注意点』(qa201402、BUILD.一貫IV+)</li>
+    <li><b>S5</b>：ハシテック「付着割裂破壊を考える（付着と割裂 その1〜6）」</li>
+    <li><b>S6</b>：自作メモ『ルートごとの付着・付着割裂破壊の検討.docx』</li>
+    <li>（関連規基準）RC規準1991/1999/2010/2018、靭性保証型耐震設計指針(1999)、終局強度型指針(1990)、告示 S55-1792（Ds・Fes）ほか</li>
+  </ul>
+</div>
+
+<p class="foot" style="text-align:center; margin-top:30px; color:#9aa5b1;">出典タグ付きの根拠集からCodexが草案・独立レビュー、本体が全出典に照らし最終検証したものです。実設計時は原典の最新版をご確認ください。</p>
+
+</div>
+</body>
+</html>
