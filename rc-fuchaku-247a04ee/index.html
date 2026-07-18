@@ -70,6 +70,20 @@
   ol.flow{counter-reset:s; list-style:none; padding-left:0; margin:10px 0;}
   ol.flow li{position:relative; padding:8px 8px 8px 44px; margin:8px 0; background:#fff; border:1px solid var(--line); border-radius:9px;}
   ol.flow li::before{counter-increment:s; content:counter(s); position:absolute; left:10px; top:8px; width:24px; height:24px; background:var(--accent); color:#fff; border-radius:50%; text-align:center; line-height:24px; font-weight:800; font-size:13px;}
+  .fc{margin:12px 0;}
+  .fc-node{background:#fff; border:1.5px solid var(--line); border-radius:10px; padding:10px 12px; font-size:13.5px;}
+  .fc-start{border-color:var(--accent); background:var(--accent-soft);}
+  .fc-note{font-size:12.5px; color:var(--sub); background:#fffbe8; border:1px solid #f0e2a8; border-radius:8px; padding:8px 10px; margin:8px 0;}
+  .fc-arrow{text-align:center; color:var(--sub); font-size:12px; font-weight:700; margin:6px 0;}
+  .fc-arrow.ok{color:var(--ok);}
+  .fc-arrow.ng{color:var(--ng);}
+  .fc-branch{display:grid; grid-template-columns:1fr 1.2fr; gap:14px; align-items:start; margin-top:4px;}
+  .fc-branch2{display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; margin-top:4px;}
+  .fc-head{text-align:center; font-weight:800; border-radius:8px; padding:6px; margin-bottom:8px; font-size:13.5px; background:#e8eef7; color:var(--accent); border:1px solid #c7ddf3;}
+  .fc-node.fc-ok{border-color:#a9ddd2; background:var(--jin-soft); font-weight:700; color:var(--jin); text-align:center;}
+  .fc-node.fc-jin{border-color:#a9ddd2; background:var(--jin-soft);}
+  .fc-node.fc-kyo{border-color:#eecaa6; background:var(--kyo-soft);}
+  @media(max-width:560px){.fc-branch{grid-template-columns:1fr;}}
   .src{color:var(--sub); font-size:11.5px;}
   .foot{font-size:12.5px; color:var(--sub);}
   .legend{font-size:12.5px; color:var(--sub); margin:6px 0 0;}
@@ -237,13 +251,34 @@
 </table>
 
 <h3>設計判断フロー（要約）</h3>
-<ol class="flow">
-  <li>対象部材が <b>通し配筋</b> か <b>カットオフ筋を含む</b> かを確認 <span class="src">【S3-p3】【No.48】</span></li>
-  <li><b>ルート1・2</b>：通し配筋＋大地震時に曲げ降伏しない＋せん断安全性を確認 → 付着（割裂）検討を省略可（RC規準2018 の省略規定で扱うなら「<b>荒川mean式</b>でせん断安全性を確認」が条件）<span class="src">【No.14/No.31】【S2-②要点5】</span></li>
-  <li><b>ルート3・靭性型</b>：荒川式／RC規準2018式／靭性指針式で付着割裂破壊の防止を確認 → <span class="pill fa">FA〜FC</span>・Ds 小 <span class="src">【No.32】【S2-①冒頭】</span></li>
-  <li><b>ルート3・強度型</b>：検討が NG でそれを最終判断とするなら <span class="pill fd">FD</span> 扱い → 最大側 Ds で保有耐力を確保 <span class="src">【S4】</span></li>
-  <li>短スパン梁で <b>シアスパン比 2.0 未満／τu/Fc 0.2 超</b> など影響が無視できない場合は、曲げ降伏後を含めて検討 <span class="src">【No.45】</span></li>
-</ol>
+<div class="fc">
+  <div class="fc-node fc-start"><b>STEP 1｜配筋形式を確認</b>　—　対象部材が <b>通し配筋</b> か <b>カットオフ筋を含む</b> か <span class="src">【S3-p3】【No.48】</span></div>
+  <div class="fc-note">▶ <b>カットオフ筋を含む場合</b>：ルートによらず別途検討（付録1-3.1 または RC規準2010 16条。荒川式 Qsu による代用は不可）<span class="src">【S3-p3】【S2-①】</span></div>
+  <div class="fc-arrow">▼　通し配筋の場合、計算ルートで分岐　▼</div>
+  <div class="fc-branch">
+    <div>
+      <div class="fc-head">ルート1・2</div>
+      <div class="fc-node">大地震時に<b>曲げ降伏しない</b>ことを確認＋<b>せん断の安全性</b>を確認（RC規準2018 の省略規定で扱うなら<b>荒川mean式</b>で確認）<span class="src">【No.14/No.31】【S2-②要点5】</span></div>
+      <div class="fc-arrow ok">▼ 満足</div>
+      <div class="fc-node fc-ok">付着（割裂）検討を省略可</div>
+    </div>
+    <div>
+      <div class="fc-head">ルート3</div>
+      <div class="fc-node"><b>荒川式／RC規準2018式／靭性指針式</b>で付着割裂破壊の防止を確認 <span class="src">【No.32】【S2-①冒頭】</span></div>
+      <div class="fc-branch2">
+        <div>
+          <div class="fc-arrow ok">▼ OK</div>
+          <div class="fc-node fc-jin"><b>靭性型</b><br><span class="pill fa">FA〜FC</span> 維持・Ds 小</div>
+        </div>
+        <div>
+          <div class="fc-arrow ng">▼ NG（最終判断とする場合）</div>
+          <div class="fc-node fc-kyo"><b>強度型</b><br><span class="pill fd">FD</span> 扱い・最大側 Ds で保有耐力確保 <span class="src">【S4】</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="callout c-warn" style="margin-top:14px;"><div class="t">⚠ 例外：短スパン梁</div><b>シアスパン比 2.0 未満／τu/Fc 0.2 超</b>など影響が無視できない場合は、省略せず曲げ降伏後を含めて検討する。<span class="src">【No.45】</span></div>
+</div>
 
 <!-- 6 -->
 <h2 id="s6"><span class="no">6.</span>付着割裂破壊の検討方法（規準式）</h2>
