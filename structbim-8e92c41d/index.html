@@ -16,23 +16,25 @@
   <span class="sep"></span>
   <button id="btn-new">新規</button><button id="btn-open">開く</button><button id="btn-save" title="Ctrl+S">保存</button><button id="btn-sample">サンプル</button>
   <span class="sep"></span>
-  <button id="btn-plan" class="on">平面</button><button id="btn-3d">3D</button>
+  <button id="btn-plan" class="on" title="伏図（スナップ・配置）">平面</button><button id="btn-3d">3D</button><button id="v-front" title="正面（Y方向に見る）">正</button><button id="v-right" title="右側面">側</button><button id="v-top" title="上面">上</button>
   <label>階 <select id="story"></select></label>
   <span class="sep"></span>
   <button id="btn-col">柱</button><button id="btn-beam">梁</button>
+  <label title="選択フィルタ">選択 <select id="filter"><option value="all">全て</option><option value="column">柱</option><option value="girder">大梁</option><option value="beam">小梁</option></select></label>
+  <button id="btn-table" title="通り芯・階・断面・部材を表で編集（SS7/midas風）">表</button>
   <span class="sep"></span>
-  <span class="muted">書出</span><button id="btn-stb" title="ST-Bridge 2.0.1（SS7）">STB</button><button id="btn-dxf" title="現在階の伏図">DXF</button><button id="btn-3dm" title="Rhino">3dm</button>
+  <span class="muted">書出</span><button id="btn-stb" title="ST-Bridge 2.0.1（SS7）">STB</button><button id="btn-dxf" title="現在階の伏図">DXF</button><button id="btn-3dm" title="Rhino">3dm</button><button id="btn-set" title="伏図・軸組図の一式（参照図面と同じレイヤ・文字・寸法の書式）">図面一式</button>
   <span class="grow"></span>
   <button id="btn-help">?</button>
 </header>
 <main>
   <aside id="tree"></aside>
-  <section id="viewport"></section>
+  <section id="viewport"><div id="table"></div></section>
   <aside id="props"></aside>
 </main>
 <footer>
   <div id="history"></div>
-  <div class="cmdrow"><span id="prompt">コマンド:</span><input id="cmd" autocomplete="off" spellcheck="false" placeholder="例: column C1 X1 Y1 ／ beam G1（クリックで配置）／ help"><span id="status" class="muted"></span></div>
+  <div class="cmdrow"><span id="prompt">コマンド:</span><div class="cmdwrap"><input id="cmd" autocomplete="off" spellcheck="false" placeholder="例: column C1 X1 Y1 ／ 梁 G1（クリックで配置）／ Space・右クリックで繰り返し ／ help"><div id="suggest"></div></div><span id="aids"></span><span id="status" class="muted"></span></div>
 </footer>
 <script type="module" src="app.js"></script>
 </body>

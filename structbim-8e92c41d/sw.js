@@ -1,5 +1,5 @@
 // Network-first: online users always get the newest app; offline falls back to the last cached copy.
-const CACHE = "sbim-20261118072936";
+const CACHE = "sbim-20261118085943";
 self.addEventListener("install", (e) => { self.skipWaiting(); });
 self.addEventListener("activate", (e) => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);
