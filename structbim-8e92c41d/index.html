@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>StructBIM Web</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#1e1f22">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <strong>StructBIM</strong> <span id="title" class="muted"></span>
+  <span class="sep"></span>
+  <button id="btn-new">新規</button><button id="btn-open">開く</button><button id="btn-save" title="Ctrl+S">保存</button><button id="btn-sample">サンプル</button>
+  <span class="sep"></span>
+  <button id="btn-plan" class="on">平面</button><button id="btn-3d">3D</button>
+  <label>階 <select id="story"></select></label>
+  <span class="sep"></span>
+  <button id="btn-col">柱</button><button id="btn-beam">梁</button>
+  <span class="sep"></span>
+  <span class="muted">書出</span><button id="btn-stb" title="ST-Bridge 2.0.1（SS7）">STB</button><button id="btn-dxf" title="現在階の伏図">DXF</button><button id="btn-3dm" title="Rhino">3dm</button>
+  <span class="grow"></span>
+  <button id="btn-help">?</button>
+</header>
+<main>
+  <aside id="tree"></aside>
+  <section id="viewport"></section>
+  <aside id="props"></aside>
+</main>
+<footer>
+  <div id="history"></div>
+  <div class="cmdrow"><span id="prompt">コマンド:</span><input id="cmd" autocomplete="off" spellcheck="false" placeholder="例: column C1 X1 Y1 ／ beam G1（クリックで配置）／ help"><span id="status" class="muted"></span></div>
+</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
